@@ -6,7 +6,7 @@ import "dotenv/config";
 
 // -----------------------------------------------------------------
 // ⚠️ 여기에 deploy.ts로 "새로" 배포한 계약 주소를 붙여넣으세요!
-const DEPLOYED_CONTRACT_ADDRESS = "0x2A9dd58341827B2629e1bE31154ba01E36B87719";
+const DEPLOYED_CONTRACT_ADDRESS = "0x...";
 // -----------------------------------------------------------------
 
 // .env 파일에서 모든 키와 URL을 읽어옵니다.
@@ -102,7 +102,7 @@ async function main() {
   console.log("New customers setup complete.");
 
   // --- 5. SBT 민팅 (시나리오 준비) ---
-  const tokenId = 4; // (겹치지 않게 4로 설정)
+  const tokenId = 1; 
   console.log(`\n--- MINTING SBT ---`);
   
   // mint()는 onlyOwner이므로 deployerSigner가 호출
@@ -112,7 +112,7 @@ async function main() {
   );
 
   const initialOwner = await contract.ownerOf(tokenId);
-  console.log(`SBT (ID: ${tokenId}) minted. Current owner: ${initialOwner}`);
+  console.log(`SBT (ID: ${tokenId}) minted.`);
   
   // [수정 1] EIP-55 체크섬 문제 해결 (모두 소문자로 비교)
   if (initialOwner.toLowerCase() !== lostAddress.toLowerCase()) {
