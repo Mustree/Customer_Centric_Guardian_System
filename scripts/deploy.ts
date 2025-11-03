@@ -37,7 +37,7 @@ async function main() {
   console.log(`Deploying contracts with the account: ${signer.address}`);
 
   // --- 4. HRE에서 아티팩트(ABI, Bytecode) 가져오기 ---
-
+  // (이것이 hre를 import한 이유입니다)
   const artifact = await hre.artifacts.readArtifact(
     "CustomerCentricGuardianSystem"
   );
