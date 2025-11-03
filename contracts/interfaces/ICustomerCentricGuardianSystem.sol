@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/access/IOwnable.sol";
+
 
 // 계약에서 사용하는 Struct 정의 (인터페이스 파일 최상단)
 struct Customer {
@@ -20,7 +20,7 @@ struct RecoveryAttempt {
  * @title ICustomerCentricGuardianSystem
  * @dev CustomerCentricGuardianSystem 계약의 외부 인터페이스
  */
-interface ICustomerCentricGuardianSystem is IERC721, IOwnable {
+interface ICustomerCentricGuardianSystem is IERC721 {
     // --- Events ---
     event CustomerAdded(address indexed customer, address[] guardians);
     event GuardianReplaced(address indexed customer, address indexed oldGuardian, address indexed newGuardian);
@@ -30,8 +30,14 @@ interface ICustomerCentricGuardianSystem is IERC721, IOwnable {
     event SBTRecovered(address indexed lostAddress, address indexed newOwner);
     event SBTRecoveryFailed(address indexed lostAddress);
 
+    // --- Ownable 함수 직접 추가 ---
+    function owner() external view returns (address);
+    function transferOwnership(address newOwner) external;
+    function renounceOwnership() external;
     // --- State Variable Getters ---
-    
+    function MANAGER_1() external view returns (address);
+    function MANAGER_2() external view returns (address);
+    function MANAGER_3() external view returns (address);
     // Struct Getters
     function customers(address _customer) external view returns (address customerAddress);
     function recoveryRequests(address _lostAddress) external view returns (address newOwner, uint256 nonce, bool active);
@@ -49,9 +55,7 @@ interface ICustomerCentricGuardianSystem is IERC721, IOwnable {
     function customerList(uint256 _index) external view returns (address);
 
     // Public Constant Getters
-    function MANAGER_1() external view returns (address);
-    function MANAGER_2() external view returns (address);
-    function MANAGER_3() external view returns (address);
+    
     function CUSTOMER_GUARDIAN_COUNT() external view returns (uint8);
     function MANAGER_COUNT() external view returns (uint8);
     function requiredApprovals() external view returns (uint8);

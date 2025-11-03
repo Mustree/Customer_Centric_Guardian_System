@@ -19,9 +19,10 @@ contract CustomerCentricGuardianSystem is ERC721, Ownable{
     
     address[] public customerList;
     
-    address public constant MANAGER_1 = 0x9002aF6489E76980528B790BB1114Cb0D842fE47; // replace with your address
-    address public constant MANAGER_2 = 0x78aA20900Ba03A0c39Fc4019A3384D675bff1eEa; // replace with your address
-    address public constant MANAGER_3 = 0xbDf2036Dc0E0a992bF7716E54fE6EAdb6B5F2D8D; // replace with your address, only for initial customer
+    address public MANAGER_1; 
+    address public MANAGER_2; 
+    address public MANAGER_3; 
+    
     uint8 public constant CUSTOMER_GUARDIAN_COUNT = 3;
     uint8 public constant MANAGER_COUNT = 2;
     uint8 public requiredApprovals;
@@ -81,19 +82,23 @@ contract CustomerCentricGuardianSystem is ERC721, Ownable{
 
 
     // 이니셜 커스터머 3명 아래로.
-    constructor(address[] memory _initialCustomers, uint8 _requiredApprovals) ERC721("RecoverableSBT", "RSBT") {
+    constructor(address[] memory _initialCustomers,address[3] memory _managers,  uint8 _requiredApprovals) ERC721("RecoverableSBT", "RSBT") {
         require(_initialCustomers.length > 0, "Must provide at least one initial customer.");
         require(_requiredApprovals == 3, "Required approvals must be 3 for a 5-guardian system.");
+        require(_managers[0] != address(0) && _managers[1] != address(0) && _managers[2] != address(0), "Managers cannot be zero address");
 
-        managers[MANAGER_1] = true;
-        managers[MANAGER_2] = true;
-        managers[MANAGER_3] = true;
+        managers[_managers[0]] = true;
+        managers[_managers[1]] = true;
+        managers[_managers[2]] = true;
+        MANAGER_1 = _managers[0];
+        MANAGER_2 = _managers[1];
+        MANAGER_3 = _managers[2];
         requiredApprovals = _requiredApprovals;
 
         address[] memory initialGuardians = new address[](MANAGER_COUNT + 1);
-        initialGuardians[0] = MANAGER_1;
-        initialGuardians[1] = MANAGER_2;
-        initialGuardians[2] = MANAGER_3;
+        initialGuardians[0] = _managers[0];
+        initialGuardians[1] = _managers[1];
+        initialGuardians[2] = _managers[2];
 
         for (uint i = 0; i < _initialCustomers.length; i++) {
             address customerAddr = _initialCustomers[i];
@@ -180,6 +185,7 @@ contract CustomerCentricGuardianSystem is ERC721, Ownable{
         else{
         newGuardians[0] = MANAGER_1;
         newGuardians[1] = MANAGER_2;
+        
         uint customerGuardiansAssigned = 0;
         for (uint i = totalCustomers; i > 0 && customerGuardiansAssigned < CUSTOMER_GUARDIAN_COUNT; i--) {
             newGuardians[MANAGER_COUNT + customerGuardiansAssigned] = customerList[i - 1];
