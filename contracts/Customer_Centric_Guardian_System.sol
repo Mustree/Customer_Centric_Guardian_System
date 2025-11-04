@@ -257,7 +257,7 @@ contract CustomerCentricGuardianSystem is ERC721, Ownable{
     //고객이 자신의 불활성 가디언을 변경하는 함수
     function replaceInactiveGuardian(address _oldGuardian, address _newGuardian) external onlyCustomer {
         require(isGuardianFor(_oldGuardian, msg.sender), "Old guardian is not a guardian for you.");
-        require(isCustomer[_newGuardian], "New guardian must be a registered customer.");
+        //require(isCustomer[_newGuardian], "New guardian must be a registered customer."); 가디언은 비회원인 자신의 친구, 가족일 수도 있음
         require(!isGuardianFor(_newGuardian, msg.sender), "New guardian is already one of your guardians.");
 
         address[] storage guardians = customers[msg.sender].guardians;
